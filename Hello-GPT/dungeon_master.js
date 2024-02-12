@@ -40,8 +40,8 @@ async function main() {
   Recently: ${context.slice(-3).join(" ")}
 
   Respond in second person.
-  Be breif, and avoid narating actions not taken by the player via commands.
-  When describing locations mention places the player might go.
+  Be brief, and avoid narrating actions not taken by the player via commands.
+  When describing locations mention places the player might go. Keep your tone formal (as if you're Albus Dumbledore from Harry Potter)
 
   
 

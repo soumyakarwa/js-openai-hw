@@ -38,6 +38,7 @@ async function main() {
   `;
 
   const response = await gptPrompt(prompt, {
+    // model: "3.5-turbo",
     temperature: 0.2,
     //https://platform.openai.com/tokenizer?view=bpe
     logit_bias: {

@@ -9,7 +9,8 @@ import { gptPrompt } from "../shared/openai.js";
 main();
 
 async function main() {
-  say("Hello, Player!");
+  var temp = 0.1 + Math.random() * (0.5 - 0.1);
+  say(`Hello, Player! The temperature for this round is ${temp}`);
 
   const topic = await ask("What do you want to be quized on?");
 
@@ -22,7 +23,7 @@ async function main() {
 
     Include only the array, start with [ and end with ].
     `,
-    { max_tokens: 1024, temperature: 0.3 },
+    { max_tokens: 1024, temperature: temp }
   );
 
   let questions = [];
@@ -35,6 +36,7 @@ async function main() {
   }
 
   say("");
+  var correctAnswers = 0;
 
   for (const q of questions) {
     const a = await ask(q);
@@ -46,9 +48,16 @@ async function main() {
     Be an easy grader. Accept answers that are close enough. Allow misspellings.
     Answer yes or no. If no, provide the correct answer.
     `,
-      { max_tokens: 64, temperature: 0.1 },
+      { max_tokens: 64, temperature: temp }
     );
     say(response);
+
+    if (response.toLowerCase().includes("yes")) {
+      correctAnswers++;
+    }
+
     say("");
   }
+
+  say(`You got ${correctAnswers} out of 4 questions correct`);
 }
