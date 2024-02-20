@@ -18,6 +18,9 @@ async function main() {
   const prompt = `
     I want to learn more about ${elements.topic}. Currently my knowledge in this topic is at a ${elements.depth} level. I have ${elements.time} to dedicate to this every day. Can you design a study plan for the next 6 months, for me to achieve my learning goals. 
   `;
-  const studyPlan = await gptPrompt(prompt, { temperature: 0.7 });
+  const studyPlan = await gptPrompt(prompt, {
+    temperature: 0.7,
+    max_tokens: 2048,
+  });
   say(`\n${studyPlan}\n`);
 }
