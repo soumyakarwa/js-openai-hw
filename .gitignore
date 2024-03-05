@@ -1,6 +1,6 @@
 # MacOS folder metadata, not relevant to codebase
 .DS_Store
-
+scraper_venv/
 
 # contains installed node modules and dependencies, should be installed with `npm install` rather than from version control
 # Deno doesn't use node_modules, but we'll ignore it just in case we use it
