@@ -1,8 +1,9 @@
 import { ask, say } from "../shared/cli.js";
 import { gptPrompt } from "../shared/openai.js";
+import { readCSV } from "https://deno.land/x/csv/mod.ts";
 
 async function main() {
-  const filePath = "./scraper/reviews.json";
+  const filePath = "./scraper/reviews.csv";
   const wordsDescribingBook = [
     "Engrossed",
     "Empathetic",
@@ -14,13 +15,17 @@ async function main() {
   var ratings = [];
   var words = [];
   try {
-    // Read the file content
-    const data = await Deno.readTextFile(filePath);
-    // Parse the JSON content
-    const reviews = JSON.parse(data);
+    const f = await Deno.open(filePath);
+
+    let reviews = [];
+    for await (const row of readCSV(f)) {
+      for await (const cell of row) {
+        reviews.push(cell);
+      }
+    }
 
     say(
-      `Hi there! This tool will analyse 12 book reviews for "These Violent Delights" by Chloe Gong. I will tell you how the users rated and felt about a book based on their review`
+      `Hi there! This tool will analyse reviews for "The Paris Apartment" by Lucy Foley. It will provide two results: first, what rating the reader gave the book and two, one word describing what the reading experience was like.`
     );
 
     // Iterate over each review in the reviews array
@@ -29,17 +34,16 @@ async function main() {
         I'm going to provide you with a book review about "These Violent Delights" by Chloe Gong. I want you to analyse the review and provide me two answers:
 
         First, analyse this review and tell me how much the review has rated the book out of 5. If the review does not provide a numerical rating then output NA.
-
-        I want the output to be as such:
-        "Rating: user rating/5.0 or NA"
-
+        
         Second, analyse this review and tell me what the reviewer felt about the book "overall." Choose one word from these words, ${wordsDescribingBook} that describes the reviewer's feelings about the book.
 
-        Provide the output for these two reviews in an json like this:
+        Provide the output for these two categories, rating and feeling, in a javascript object like this:
 
         {rating: user rating/5.0, feeling: word describing the book}
 
-        Do not provide responses that aren't in the json format. I don't want paragraphs of results. 
+        Do not put the javascript object properties -rating or feeling- in quotation marks.
+
+        Provide no other analysis, except for the aforementioned javascript object.
 
         Here is the review:
 
@@ -56,6 +60,9 @@ async function main() {
   } catch (error) {
     console.error("Failed to read or parse JSON file:", error);
   }
+
+  console.log(ratings);
+  console.log(words);
 }
 
 main();
