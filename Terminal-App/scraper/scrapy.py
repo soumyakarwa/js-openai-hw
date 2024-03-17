@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import os
 
-def fetch_reviews(url, max_reviews=100):
+def fetch_reviews(url, max_reviews=30):
     reviews_collected = []
     while len(reviews_collected) < max_reviews:
         response = requests.get(url)
@@ -29,6 +30,11 @@ reviews_df = pd.DataFrame(reviews)
 
 # Replace newline characters with spaces in the 'review_text' column
 reviews_df['review_text'] = reviews_df['review_text'].str.replace('\n', ' ', regex=False)
+
+file_path = './reviews.csv'
+if os.path.exists(file_path):
+    print("passed")
+    os.remove(file_path)
 
 # Now, save the DataFrame to a CSV file, ensuring each review is in its own row
 reviews_df.to_csv('reviews.csv', index=False, encoding='utf-8')

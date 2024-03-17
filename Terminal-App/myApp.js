@@ -1,67 +1,79 @@
 import { ask, say } from "../shared/cli.js";
 import { gptPrompt } from "../shared/openai.js";
+import { readCSV } from "https://deno.land/x/csv/mod.ts";
 
-main();
-
-/**
- * This function will ask the user for their Goodreads username and userid. It will then scrape their "read" bookshelf from Goodreads and create a csv/json file with the book name, author name, review. The program will analyse which books have reviews and it will call the OpenAI-API to analyse the reviews and add two-columns, rating and review-in-one-word. This is to prevent a redundant API call."
- */
 async function main() {
-  // temporary review by down the rabbit hole:
-  const bookReview1 = `
-    Taking deep dive into the past for this one, and finally reading more Agatha Christie. Up until now, surprise surprise, I’ve actually only read The Murder on the Orient Express, I believe, which was recommended to me by a friend. Now that I’ve read this one too, I think I might just start from the beginning and go through the rest of the Hercule Poirot mysteries and see how I feel about them. 
-
-    The Murder of Roger Ackroyd is a self-explanatory title, but the plot is really quite intricate. It revolves around a small town where everyone knows everyone, and thus most often have something to hide. After the death of one of the most rich patrons in town, the town is thrown into a disarray, and more and more suspicious circumstances arise around the death. As the suspects are narrowed down, it becomes clear that only a few number of people could have committed the murder, and it is up to Hercule Poirot and his deductions to solve it all.
-
-    Overall, quite a good read. The characters were excellent, and it was essentially a closed room scenario, since there were really only very few possibilities for the perpetrator. That is not to say it wasn’t exciting though. There were intricate storylines woven for everyone, and it was very difficult to tell who would end up being the murderer all the way up until the final chapters. The ending also has an interesting twist to it.
-
-    Rating: 4.5/5.0`;
-
-  // provided by: https://ppld.org/book-reviews/harry-potter-and-sorcerers-stone-8
-  const bookReview2 = `For people who want to enjoy an intriguing, fast paced novel, Harry Potter and the Sorcerer’s Stone is the perfect book to read. It keeps you involved throughout the book as most chapters have cliffhangers at the end. This novel is the first of the seven famous Harry Potter books by J.K. Rowling.
-
-  The book is about 11 year old Harry Potter, who receives a letter saying that he is invited to attend Hogwarts, school of witchcraft and wizardry. He then learns that a powerful wizard and his minions are after the sorcerer’s stone that will make this evil wizard immortal and undefeatable. Harry decides to go after the sorcerer’s stone before the wizard reaches it, but his loyal friends, Hermione and Ron don’t let Harry face this danger alone.
-  
-  This book is full of fantasies and imagination like at one point, Harry Potter is asked to catch a flying golden ball while flying on his broomstick. Eventually Harry Potter stands on his broomstick and tries to reach for the ball, but he falls off the broomstick in a very tense moment. He unexpectedly throws up the golden ball winning the game for his team.
-  
-  Harry Potter and a sorcerer stone is a good book to spark joy and imagination for anyone, regardless of age. But I would say it is most enjoyable for elementary school students, who can very well relate to the fantasy world. So I would say that it is a must read for younger audiences, but it’s a good read in general.
-  
-  Rating: 4.0/5.0`;
-
+  const filePath = "./scraper/reviews.csv";
   const wordsDescribingBook = [
-    "Engrossed",
-    "Empathetic",
-    "Inspired",
-    "Nostalgic",
-    "Reflective",
+    "Loved it",
+    "It was fine",
+    "Nothing special",
+    "Bored",
+    "Hated it",
   ];
 
-  // currently working on analysing the review
-  say(`Hi there! Here's a book review.`);
+  var reviews = [];
+  var ratings = [];
+  var words = [];
+  try {
+    const f = await Deno.open(filePath);
+    for await (const row of readCSV(f)) {
+      for await (const cell of row) {
+        reviews.push(cell);
+      }
+    }
 
-  say(`${bookReview2}\n`);
+    say(`Hey there! \n`);
 
-  const prompt = `
-      I'm going to provide you with a book review about "The Murder of Roger Ackroyd" by Agatha Christie. I want you to analyse the review and provide me two answers: 
-      
-      First, analyse this review and tell me how much the review has rated the book out of 5. If the review does not provide a numerical rating then output "NA."     
+    say(
+      ` This tool will analyse reviews for "The Paris Apartment" by Lucy Foley. It will provide two results: first, what rating the reader gave the book and two, one word describing what the reading experience was like. \n`
+    );
 
-      I want the output to be as such: 
-      "Rating: user rating/5.0 or NA"
-      
-      Second, analyse this review and tell me what the reviewer felt about the book "overall." Choose one word from these words, ${wordsDescribingBook} that describes the reviewer's feelings about the book. 
+    // Iterate over each review in the reviews array
+    for (const review of reviews) {
+      const prompt = `
+        I'm going to provide you with a book review about "These Violent Delights" by Chloe Gong. I want you to analyse the review and provide me two answers:
 
-      Provide the output for these two reviews in an array like this:
+        First, analyse this review and tell me how much the review has rated the book out of 5. If the review does not provide a numerical rating then output NA.
+        
+        Second, analyse this review and tell me what the reviewer felt about the book "overall." Choose one phrase from this list, ${wordsDescribingBook} that describes the reviewer's feelings about the book.
 
-      [user rating/5.0, word describing the book]
+        Here are some pointers to consider while analysing the review: 
+        Consider the user of emotive words like "love," "disappointed," "joy," "eager" etc. Also consider the combination of these words while analyisng the review. For instance if the reviewer something along the lines of "I loved characters of the book but was disappointed with the predictable plot turns" that would mean the reviewer found the book to belong in the category of It was fine or Nothing special.
 
-      Here is the review:
+        Ensure the output is strictly in JSON format, suitable for parsing with JSON.parse(). The format should be as follows:
+        
+        {"rating": "<rating or NA>", "feeling": "<chosen phrase>"}
 
-      ${bookReview2}
-    `;
-  const rating = await gptPrompt(prompt, {
-    temperature: 0.7,
-    max_tokens: 100,
-  });
-  say(`\n${rating}\n`);
+        Do not include any text or characters outside of the JSON structure. THIS IS VERY IMPORTANT
+
+        Review:
+        ${review}
+      `;
+      const analysisResult = await gptPrompt(prompt, {
+        temperature: 0.7,
+        max_tokens: 100,
+      });
+      const cleanedString = analysisResult
+        .replace("```json", "")
+        .replace("```json ", "")
+        .replace("```", "")
+        .replace("``` ", "");
+      const jsonResult = JSON.parse(cleanedString);
+      ratings.push(jsonResult.rating);
+      words.push(jsonResult.feeling);
+    }
+  } catch (error) {
+    console.error("Failed to read or parse JSON file:", error);
+  }
+
+  const reviewDetails = reviews.map((review, index) => ({
+    review,
+    rating: ratings[index],
+    feeling: words[index],
+  }));
+
+  console.log(reviewDetails);
 }
+
+main();
