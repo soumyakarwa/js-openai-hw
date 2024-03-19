@@ -31,7 +31,7 @@ async function main() {
 
     say(yellow(`BOOK REVIEW ANALYZER\n`));
 
-    const introduction = `This tool is designed to analyze book reviews for "The Paris Apartment" by Lucy Foley. It previously gathered reviews from Goodreads and will deliver two key insights: firstly, the rating assigned to the book by each reviewer, and secondly, an expression capturing the essence of their reading experience.`;
+    const introduction = `This tool is designed to analyze book reviews for "The Paris Apartment" by Lucy Foley. It previously gathered reviews from Goodreads and will deliver two key insights: first, the rating assigned to the book by each reviewer, and second, an expression capturing the essence of their reading experience.`;
 
     const wrappedIntroduction = cliFormat.wrap(introduction, {
       width: textWidth,
