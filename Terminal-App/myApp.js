@@ -2,11 +2,14 @@ import { ask, say } from "../shared/cli.js";
 import { gptPrompt } from "../shared/openai.js";
 import { readCSV } from "https://deno.land/x/csv/mod.ts";
 import { green, blue, red, yellow } from "https://deno.land/std/fmt/colors.ts";
+import cliFormat from "https://raw.githubusercontent.com/zongwei007/cli-format-deno/v3.x/src/mod.ts";
 
 async function main() {
   const filePath = "./scraper/reviews.csv";
   const italics = "\x1b[3m";
   const reset = "\x1b[0m";
+
+  const textWidth = 62;
   const wordsDescribingBook = [
     "Loved it",
     "It was fine",
@@ -28,9 +31,13 @@ async function main() {
 
     say(yellow(`BOOK REVIEW ANALYZER\n`));
 
-    say(
-      `This tool is designed to analyze book reviews for "The Paris Apartment" by Lucy Foley. It previously gathered reviews from Goodreads and will deliver two key insights: firstly, the rating assigned to the book by each reviewer, and secondly, an expression capturing the essence of their reading experience.\n`
-    );
+    const introduction = `This tool is designed to analyze book reviews for "The Paris Apartment" by Lucy Foley. It previously gathered reviews from Goodreads and will deliver two key insights: firstly, the rating assigned to the book by each reviewer, and secondly, an expression capturing the essence of their reading experience.`;
+
+    const wrappedIntroduction = cliFormat.wrap(introduction, {
+      width: textWidth,
+    });
+
+    say(`${wrappedIntroduction}\n`);
 
     say(blue(`${italics}analyzing reviews${reset}\n`));
 
@@ -82,16 +89,25 @@ async function main() {
 
   say(blue(`${italics}\nanalysis complete${reset}\n`));
 
-  const response = await ask(
-    red(
-      `Would you like to view the result from the command line (1) or export the data into a JSON (2)? Answer with the appropriate option number.\n`
-    )
-  );
+  const outputQuestion = `Would you like to view the result from (1) the Command Line or (2) through a JSON file? Answer with the appropriate option number.`;
+
+  const wrappedOutputQuestion = cliFormat.wrap(outputQuestion, {
+    width: textWidth,
+  });
+
+  const response = await ask(`${wrappedOutputQuestion}\n`);
 
   if (response === "1") {
-    // say(`${JSON.stringify(reviewDetails)}\n`);
-    console.log(reviewDetails);
+    console.table(
+      reviewDetails.map(({ rating, feeling, review }) => ({
+        Review_Snippet: review.slice(0, 50) + "...",
+        Rating: rating,
+        Feeling: feeling,
+      }))
+    );
+    say(`\n`);
   } else {
+    say(`\n`);
     const jsonData = JSON.stringify(reviewDetails, null, 2);
     await Deno.remove("ReviewAnalysis.json");
     await Deno.writeTextFile("ReviewAnalysis.json", jsonData);
@@ -100,7 +116,7 @@ async function main() {
     );
   }
 
-  say(yellow(`Thanks for using Book Review Analyser! Come back soon :)`));
+  say(yellow(`Thanks for using Book Review Analyzer! Come back soon :)`));
 }
 
 main();
