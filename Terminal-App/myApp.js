@@ -1,5 +1,5 @@
-import { ask, say } from "../shared/cli.js";
-import { gptPrompt } from "../shared/openai.js";
+import { ask, say } from "../shared/cli.ts";
+import { gptPrompt } from "../shared/openai.ts";
 import { readCSV } from "https://deno.land/x/csv/mod.ts";
 import { green, blue, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 import cliFormat from "https://raw.githubusercontent.com/zongwei007/cli-format-deno/v3.x/src/mod.ts";
