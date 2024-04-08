@@ -24,7 +24,7 @@ async function setup() {
   inputField.addEventListener("keydown", onKeydown);
 
   let response = await spriteChat(
-    "You meet the adventurer for the first time. Greet them and tell them about your problem.",
+    "You meet the adventurer for the first time. Greet them and tell them about your problem."
   );
   response = response.slice(0, -1);
   showMessage("bot", response, "/images/sprite_sad.png");

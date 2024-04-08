@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nibble - Learn Something New</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="fixed">
+        <div id="title">
+          <h1>Nibble</h1>
+          <h2>Learn Something New</h2>
+        </div>
+        <div id="selections">
+          <select id="subject">
+            <option value="">Select Subject</option>
+            <option value="logic">Logic</option>
+            <option value="physics">Physics</option>
+            <option value="chemistry">Chemistry</option>
+            <option value="biology">Biology</option>
+            <option value="history">History</option>
+          </select>
+          <select id="complexity">
+            <option value="">Select Complexity</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+          <select id="time">
+            <option value="">Select Time</option>
+            <option value="5">5 Minutes</option>
+            <option value="15">10 Minutes</option>
+            <option value="30">15 Minutes</option>
+          </select>
+        </div>
+        <button id="generate">Generate</button>
+      </div>
+      <div id="result">
+        <div id="interim-text"></div>
+        <div id="lesson-title"></div>
+        <div id="section-title1"></div>
+        <div id="section-content1"></div>
+        <div id="section-title2"></div>
+        <div id="section-content2"></div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>

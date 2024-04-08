@@ -19,9 +19,11 @@ const router = new Router();
 
 // API routes
 router.get("/api/gpt", async (ctx) => {
+  console.log("Received prompt:", ctx.request.url.searchParams.get("prompt"));
   const prompt = ctx.request.url.searchParams.get("prompt");
   const shortPrompt = prompt.slice(0, 1024);
   const result = await gptPrompt(shortPrompt, { max_tokens: 1024 });
+  console.log("Generated result:", result);
   ctx.response.body = result;
 });
 

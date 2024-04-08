@@ -1,0 +1,95 @@
+:root {
+  --font-size: 1rem;
+  --title-size: 1.5rem;
+  --margin: 2rem;
+}
+
+body {
+  font-family: "Playfair-Display";
+  height: 90vh;
+  margin: var(--margin);
+  font-size: var(--font-size);
+}
+
+#lesson-title {
+  font-size: var(--title-size);
+  text-align: center;
+  margin-bottom: var(--margin);
+}
+
+#section-title1,
+#section-title2 {
+  font-weight: 600;
+  font-size: var(--font-size);
+  margin-bottom: calc(var(--margin) / 4);
+}
+
+#section-content1,
+#section-content2 {
+  /* font-weight: 600; */
+  font-size: var(--font-size);
+  margin-bottom: calc(var(--margin) / 2);
+}
+
+#fixed {
+  width: 40vw;
+  margin-bottom: var(--margin);
+}
+
+#app {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#selections {
+  font-family: "Playfair-Display";
+  margin-bottom: calc(var(--margin));
+  margin-top: calc(var(--margin));
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#result {
+  text-align: left;
+  max-width: 40vw;
+  margin-bottom: var(--margin);
+  margin-left: var(--margin);
+  margin-right: var(--margin);
+}
+
+select,
+button {
+  font-size: var(--font-size);
+  font-family: "Playfair-Display";
+  padding: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+select {
+  /* margin: 0.5rem; */
+}
+
+select:hover {
+  cursor: pointer;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #e9e9e9;
+}
+
+@font-face {
+  font-family: "Playfair-Display";
+  src: url("./assets/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: "Playfair-Display-Italics";
+  src: url("./assets/Playfair_Display/PlayfairDisplay-Italic-VariableFont_wght.ttf");
+}

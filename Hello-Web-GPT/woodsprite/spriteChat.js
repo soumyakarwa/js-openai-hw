@@ -3,6 +3,7 @@ import { gpt } from "../../shared/openai.ts";
 export async function spriteChat(context) {
   try {
     const body = await context.request.body().value;
+    console.log(body);
     const messages = body.messages || [];
     const spriteName = body.name || "";
 

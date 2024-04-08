@@ -13,14 +13,14 @@ const submitButton = document.getElementById("submit");
 async function onSubmit() {
   const instruction = instructionInput.value;
   const version1 = originalInput.value;
-  const prompt =
-    `revise the following text. return only the revised text. make no changes to the text unless the change is indicated by the following instructions: ${instruction}. \n\n${version1}`;
+  const prompt = `revise the following text. return only the revised text. make no changes to the text unless the change is indicated by the following instructions: ${instruction}. \n\n${version1}`;
 
   revisionDiv.innerHTML = "loading...";
   diffDiv.innerHTML = "loading...";
 
-  const version2 = await fetch(`/api/gpt?prompt=${encodeURIComponent(prompt)}`)
-    .then((response) => response.text());
+  const version2 = await fetch(
+    `/api/gpt?prompt=${encodeURIComponent(prompt)}`
+  ).then((response) => response.text());
 
   revisionDiv.innerHTML = version2;
   updateDiff(version1, version2);
@@ -56,7 +56,6 @@ diffTab.addEventListener("click", () => {
 
 submitButton.addEventListener("click", onSubmit);
 
-originalInput.value =
-  `It was a dark and stormy night; the rain fell in torrents—except at occasional intervals, when it was checked by a violent gust of wind which swept up the streets (for it is in London that our scene lies), rattling along the housetops, and fiercely agitating the scanty flame of the lamps that struggled against the darkness.`;
+originalInput.value = `It was a dark and stormy night; the rain fell in torrents—except at occasional intervals, when it was checked by a violent gust of wind which swept up the streets (for it is in London that our scene lies), rattling along the housetops, and fiercely agitating the scanty flame of the lamps that struggled against the darkness.`;
 
 instructionInput.value = `add adjectives`;
