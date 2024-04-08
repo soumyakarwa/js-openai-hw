@@ -21,6 +21,8 @@ document.getElementById("generate").addEventListener("click", async () => {
     const promptText = `
       You are a knowledge expanding AI bot. Tell me a quick bite lesson like in Khan Academy or Brilliant.org about ${subject}. I want the quick bit lesson to be at a ${complexity} level and easy to digest in ${time} minutes. For example, if I select "History, intermediate", you could tell me something about the Indus Valley Civilization. If I select "Logic, easy", you could explain some mathematical logic at high-school or early college level. 
 
+      Make the length of the lesson appropriate to the ${time} selected. For instance, if ${time} is 5 minutes, then make the lesson 200 words total. For instance, if ${time} is 10 minutes, then make the lesson 500 words total. For instance, if ${time} is 10 minutes, then make the lesson 700 words total. 
+
       Ensure the output is strictly in JSON format, suitable for parsing with JSON.parse(). The format should be as follows:
       
       {
