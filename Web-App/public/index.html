@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atlas!</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="content">
+        <div class="title">Atlas!</div>
+        <div class="game">
+          <div id="col1">
+            <div id="gameplay">
+              <div class="section-title">Game Play</div>
+              <div id="chat-container">
+                <div id="chat-box">
+                  <!-- Messages will be added here dynamically -->
+                </div>
+                <div class="input-container">
+                  <input
+                    type="text"
+                    id="message-input"
+                    placeholder="Name a city with S..."
+                  />
+                  <button id="send-button">
+                    <img src="./assets/arrow-upward.png" alt="Send" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="col2">
+            <div id="fun-fact">
+              <div class="section-title">Fun Fact</div>
+              <div class="col2-child" id="fun-fact-content">CONTENT</div>
+            </div>
+            <div id="completed-countries">
+              <div class="section-title">Completed Countries</div>
+              <div class="col2-child">CONTENT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
