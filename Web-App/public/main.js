@@ -68,7 +68,7 @@ async function computerResponse(message) {
     1. We cannot mention any cities from this array: ${mentionedCities}. This is a very important rule! Cannot be broken.
     2. We can only mention cities. We cannot mention Countries, Continents, etc. 
     
-    I have said ${message}. Name a city starting the last letter of ${message}. Please also mention a fun fact about the city you name. Make sure the fun fact is about 75 words
+    I have said ${message}. Name a city starting the last letter of ${message}. Do not menion any city that is already in ${mentionedCities} Please also mention a fun fact about the city you name. Make sure the fun fact is about 75 words
 
     Ensure the output is strictly in JSON format, suitable for parsing with JSON.parse(). The format should be as follows:
     
@@ -88,7 +88,7 @@ async function computerResponse(message) {
       "funfact": {"Indore, a bustling city in the heart of India's Madhya Pradesh state, stands out for its vibrant culture and historical richness. Often dubbed as the 'Food Capital of India,' Indore's culinary scene is famous for its delectable street food, particularly the Sarafa Bazaar, which comes alive at night with an array of sweets and snacks. The city is also known for hosting the Kumbh Mela, one of the world's largest religious gatherings, every 12 years. Remarkably, Indore has been awarded the title of India's cleanest city multiple times in a row, reflecting its residents' commitment to cleanliness and sustainability. This thriving city seamlessly blends tradition with modernity, making it a fascinating destination for travelers and locals alike."}
     }
 
-    The category names of the json must be "city" and "funfact" in that format. Do not change that. 
+    STICK TO THIS JSON FORMAT!
   `;
     var response;
     var obj;
@@ -112,8 +112,15 @@ async function computerResponse(message) {
     }
     updateMessage(tempMessageId, obj.city);
     mentionedCities.push(obj.city);
-    funFactContent.innerHTML = obj.funfact;
-
+    if (obj.funfact) {
+      funFactContent.innerHTML = obj.funfact;
+    } else if (obj.funFact) {
+      funFactContent.innerHTML = obj.funFact;
+    } else if (obj.fun_fact) {
+      funFactContent.innerHTML = obj.fun_fact;
+    } else {
+      funFactContent.innerHTML = "in the next round!";
+    }
     console.log(
       `once fun fact has updated mentioned cities is ${mentionedCities}`
     );
