@@ -1,6 +1,6 @@
 :root {
   --font-size: 1rem;
-  --section-title-size: 1.2 5rem;
+  --section-title-size: 1.25rem;
   --title-size: 2.75rem;
   --margin: 2rem;
   --background-color: #e1ebf5;
@@ -57,27 +57,34 @@ body {
   /* border: 2px solid var(--text-color); */
 }
 
+#col2 {
+  width: 35vw;
+  /* height: 90%; */
+  /* display: flex;
+  flex-direction: column; */
+  /* justify-content: center; */
+  /* padding-top: calc(var(--margin) / 2);
+  gap: var(--margin); */
+}
+
+#fun-fact {
+  padding: calc(var(--margin) / 2);
+  font-family: "Bodoni-Moda";
+}
+
 #gameplay {
   padding: calc(var(--margin) / 2);
 }
 
-#col2 {
-  width: 35vw;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  padding-top: calc(var(--margin) / 2);
-  gap: var(--margin);
-}
-
 .col2-child {
   margin-top: calc(var(--margin) / 2);
-  padding-top: calc(var(--margin) / 2);
+  padding: calc(var(--margin) / 2);
+  font-family: "Bodoni-Moda";
+  /* padding-top: calc(var(--margin) / 2);
   padding-left: calc(var(--margin) / 2);
-  padding-right: calc(var(--margin) / 2);
+  padding-right: calc(var(--margin) / 2); */
   border: 2px solid var(--text-color);
-  height: 28vh;
+  height: 65.5vh;
 }
 
 #chat-container {
@@ -126,7 +133,7 @@ body {
   display: flex;
   align-items: center;
   padding: calc(var(--margin) / 4);
-  border: 1px solid var(--text-color);
+  border: 2px solid var(--text-color);
   /* opacity: 50%; */
   border-radius: 30px;
 }

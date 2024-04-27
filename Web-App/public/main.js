@@ -1,7 +1,5 @@
-// Note: Adjusted to async function
-// document.getElementById("generate").addEventListener("click", async () => {});
-
 var mentionedCities = [];
+var computerMessageIDCounter = 0;
 
 async function myGPTPrompt(promptText) {
   try {
@@ -15,12 +13,12 @@ async function myGPTPrompt(promptText) {
 }
 
 document.getElementById("send-button").addEventListener("click", function () {
-  console.log("button clicked");
   var input = document.getElementById("message-input");
   var message = input.value.trim();
   if (message) {
     // Display the user message
     displayMessage(message, "user");
+    mentionedCities.push(message);
 
     // Clear the input field
     input.value = "";
@@ -30,26 +28,44 @@ document.getElementById("send-button").addEventListener("click", function () {
   }
 });
 
-function displayMessage(message, sender) {
+function displayMessage(message, sender, messageId) {
   var chatBox = document.getElementById("chat-box");
   var messageDiv = document.createElement("div");
   messageDiv.classList.add("message", sender + "-message");
   messageDiv.textContent = message;
+  if (messageId) {
+    messageDiv.id = messageId;
+  }
   chatBox.appendChild(messageDiv);
-  mentionedCities.push(message);
-  // Scroll to the bottom of the chat box
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function updateMessage(messageId, newText) {
+  var messageElement = document.getElementById(messageId);
+  if (messageElement) {
+    messageElement.textContent = newText;
+  }
+}
+
+function generateUniqueMessageId() {
+  // Increment the counter and return a unique ID
+  computerMessageIDCounter++;
+  return "message-" + computerMessageIDCounter;
 }
 
 async function computerResponse(message) {
   // Just a timeout to simulate delay
   setTimeout(async function () {
     const funFactContent = document.getElementById("fun-fact-content");
+    funFactContent.innerHTML = "Loading...";
+
+    const tempMessageId = generateUniqueMessageId();
+    displayMessage("Loading...", "computer", tempMessageId);
 
     const promptText = `
     We are playing a game of Atlas. The game starts with me saying the name of a cities starting with letter S. After that you will say the name of another city starting with the last letter of the city I said. Then I have to say the name of another city starting with the last letter of the city name I just said. For example, if I say Sydney, you can say Yonkers and then I would say Seoul and then you can say Lucknow and so forth. A few more rules:
 
-    1. We cannot mention any cities from this array: ${mentionedCities}
+    1. We cannot mention any cities from this array: ${mentionedCities}. This is a very important rule! Cannot be broken.
     2. We can only mention cities. We cannot mention Countries, Continents, etc. 
     
     I have said ${message}. Name a city starting the last letter of ${message}. Please also mention a fun fact about the city you name. Make sure the fun fact is about 75 words
@@ -71,11 +87,16 @@ async function computerResponse(message) {
       "city": "Indore",
       "funfact": {"Indore, a bustling city in the heart of India's Madhya Pradesh state, stands out for its vibrant culture and historical richness. Often dubbed as the 'Food Capital of India,' Indore's culinary scene is famous for its delectable street food, particularly the Sarafa Bazaar, which comes alive at night with an array of sweets and snacks. The city is also known for hosting the Kumbh Mela, one of the world's largest religious gatherings, every 12 years. Remarkably, Indore has been awarded the title of India's cleanest city multiple times in a row, reflecting its residents' commitment to cleanliness and sustainability. This thriving city seamlessly blends tradition with modernity, making it a fascinating destination for travelers and locals alike."}
     }
+
+    The category names of the json must be "city" and "funfact" in that format. Do not change that. 
   `;
     var response;
     var obj;
 
     try {
+      console.log(
+        `before gpt prompt has run mentioned cities is ${mentionedCities}`
+      );
       response = await myGPTPrompt(promptText);
       const cleanedString = response
         .replace("```json", "")
@@ -85,11 +106,16 @@ async function computerResponse(message) {
       obj = JSON.parse(cleanedString);
       console.log(obj);
     } catch (error) {
-      console.error(error); // Log any errors
+      console.error(error);
+      updateMessage(tempMessageId, "Failed to load city name");
       funFactContent.innerHTML = "There was an error processing your request.";
     }
-    console.log(mentionedCities);
-    displayMessage(obj.city, "computer");
+    updateMessage(tempMessageId, obj.city);
+    mentionedCities.push(obj.city);
     funFactContent.innerHTML = obj.funfact;
+
+    console.log(
+      `once fun fact has updated mentioned cities is ${mentionedCities}`
+    );
   }, 1000);
 }
