@@ -47,6 +47,14 @@ function updateMessage(messageId, newText) {
   }
 }
 
+function updateInputPlaceholder(lastCityName) {
+  if (lastCityName) {
+    const lastChar = lastCityName.charAt(lastCityName.length - 1).toUpperCase();
+    document.getElementById("message-input").placeholder =
+      `Name a city with ${lastChar}...`;
+  }
+}
+
 function generateUniqueMessageId() {
   // Increment the counter and return a unique ID
   computerMessageIDCounter++;
@@ -112,6 +120,7 @@ async function computerResponse(message) {
     }
     updateMessage(tempMessageId, obj.city);
     mentionedCities.push(obj.city);
+    updateInputPlaceholder(obj.city);
     if (obj.funfact) {
       funFactContent.innerHTML = obj.funfact;
     } else if (obj.funFact) {
