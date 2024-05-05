@@ -1,5 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
-import { gptPrompt } from "../shared/openai.ts";
+import { gptPrompt, makeImage } from "../shared/openai.ts";
 import { createExitSignal, staticServer } from "../shared/server.ts";
 import { Chalk } from "npm:chalk@5";
 
@@ -24,6 +24,16 @@ router.get("/api/gpt", async (ctx) => {
   const shortPrompt = prompt.slice(0, 1024);
   const result = await gptPrompt(shortPrompt, { max_tokens: 1024 });
   console.log("Generated result:", result);
+  ctx.response.body = result;
+});
+
+router.get("/api/dalle", async (ctx) => {
+  console.log("Received prompt:", ctx.request.url.searchParams.get("prompt"));
+  const prompt = ctx.request.url.searchParams.get("prompt");
+  console.log("Request received");
+  console.log(prompt);
+  const shortPrompt = prompt.slice(0, 1024);
+  const result = await makeImage(shortPrompt);
   ctx.response.body = result;
 });
 

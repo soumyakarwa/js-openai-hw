@@ -6,6 +6,18 @@ async function myGPTPrompt(promptText) {
     const response = await fetch(
       `/api/gpt?prompt=${encodeURIComponent(promptText)}`
     ).then((response) => response.text());
+    // console.log(response);
+    return response;
+  } catch (error) {
+    throw error; // Rethrow the error to be caught by the caller
+  }
+}
+
+async function generateDallEImage(promptText) {
+  try {
+    const response = await fetch(`/api/dalle?prompt=${promptText}`).then(
+      (response) => response.text()
+    );
     return response;
   } catch (error) {
     throw error; // Rethrow the error to be caught by the caller
@@ -86,7 +98,7 @@ async function computerResponse(message) {
     }
 
     {city} should be with the first letter upper case and rest lower case, for example: "Indore"
-    {funfact} should be about 75 words. 
+    {funfact} should be about 50 words. 
     
     
     For EXAMPLE, if you say "Indore", the json format would be:
@@ -102,9 +114,6 @@ async function computerResponse(message) {
     var obj;
 
     try {
-      console.log(
-        `before gpt prompt has run mentioned cities is ${mentionedCities}`
-      );
       response = await myGPTPrompt(promptText);
       const cleanedString = response
         .replace("```json", "")
@@ -112,7 +121,6 @@ async function computerResponse(message) {
         .replace("```", "")
         .replace("``` ", "");
       obj = JSON.parse(cleanedString);
-      console.log(obj);
     } catch (error) {
       console.error(error);
       updateMessage(tempMessageId, "Failed to load city name");
@@ -130,8 +138,15 @@ async function computerResponse(message) {
     } else {
       funFactContent.innerHTML = "in the next round!";
     }
+
+    const img = await generateDallEImage(
+      `a landscape orientation photograph of ${obj.city}`
+    );
     console.log(
       `once fun fact has updated mentioned cities is ${mentionedCities}`
     );
+    console.log(img);
+    const imageElement = document.getElementById("city-image");
+    imageElement.src = img;
   }, 1000);
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -50,8 +50,8 @@
           .then((response) => response.text())
           .then((url) => {
             const e = document.createElement("div");
-
-            e.innerHTML = `
+            console.log(response, url);
+            e.innerHTML = ` 
             <div class="mb-4">
               <img class="block" src="${url}" />
               <div class="p-4 bg-gray-500 text-white w-1/2">${prompt}</div>
