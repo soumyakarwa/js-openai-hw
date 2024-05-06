@@ -13,7 +13,32 @@
         <div class="game">
           <div id="col1">
             <div id="gameplay">
-              <div class="section-title">Game Play</div>
+              <div class="section-title">
+                Game Play
+                <img
+                  src="./assets/question.png"
+                  alt="How to Play"
+                  id="how-to-play-icon"
+                  style="cursor: pointer"
+                />
+                <div id="how-to-play-popup" class="hidden">
+                  <p>How to Play Atlas:</p>
+                  <ul>
+                    <li>
+                      Start by naming a city that starts with the letter S.
+                    </li>
+                    <li>
+                      Each subsequent city must start with the last letter of
+                      the previous city.
+                    </li>
+                    <li>No city can be repeated.</li>
+                    <li>
+                      The game continues until a player can no longer name a
+                      city.
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div id="chat-container">
                 <div id="chat-box">
                   <!-- Messages will be added here dynamically -->
@@ -25,7 +50,7 @@
                     placeholder="Name a city with S..."
                   />
                   <button id="send-button">
-                    <img src="./assets/arrow-upward.png" alt="Send" />
+                    <img src="./assets/arrow.png" alt="Send" />
                   </button>
                 </div>
               </div>
